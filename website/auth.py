@@ -18,21 +18,27 @@ def signup_post():
     email = request.form.get('email')
     password = request.form.get('password')
 
+    # Validate password
+    if not password:
+        flash('Password is required', category='error')
+        return redirect(url_for('auth.signup'))
+
     # Check if the email already exists in the database
     existing_user = User.query.filter_by(email=email).first()
     if existing_user:
-        flash('Email address already exists')
+        flash('Email address already exists', category='error')
         return redirect(url_for('auth.signup'))
 
     # Hash the password before storing it
     hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-
     new_user = User(username=username, email=email, password=hashed_password)
     db.session.add(new_user)
     db.session.commit()
 
-    # Redirect to the login page after signup
-    return redirect(url_for('auth.login'))
+    # Log in the user and redirect to the home page
+    login_user(new_user)
+    flash('Signup successful! Welcome, {}!'.format(username), category='success')
+    return redirect(url_for('views.home'))
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
