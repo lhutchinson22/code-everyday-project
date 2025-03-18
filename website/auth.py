@@ -1,9 +1,16 @@
 from flask import Blueprint, request, redirect, url_for, render_template, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User, db
-from flask_login import login_user
+from flask_login import login_user, logout_user, current_user
 
 auth = Blueprint('auth', __name__)
+
+@auth.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'GET':
+        return render_template('signup.html')
+    else:
+        return signup_post()
 
 @auth.route('/signup', methods=['POST'])
 def signup_post():
@@ -43,3 +50,9 @@ def login():
             flash('Login unsuccessful. Please check your username and password.')
 
     return render_template('login.html')
+
+@auth.route('/logout')
+def logout():
+    logout_user()
+    flash('You have been logged out.')
+    return redirect(url_for('auth.login'))

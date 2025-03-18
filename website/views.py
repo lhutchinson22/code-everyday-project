@@ -1,26 +1,16 @@
-from flask import Blueprint, render_template
-from flask_login import UserMixin, login_user, login_required, logout_user, current_user
-from . import login_manager  # Import the login_manager instance
+from flask import Blueprint, render_template, redirect, url_for
+from flask_login import login_required, current_user
 
 views = Blueprint('views', __name__)
 
-class User(UserMixin):
-    # Define your User class here
-    @staticmethod
-    def get(user_id):
-        # Implement the logic to retrieve a user by user_id
-        # For example, you can query the database to get the user
-        return None  # Replace with actual user retrieval logic
-
-@login_manager.user_loader
-def load_user(user_id):
-    # Implement the logic to load a user given the user_id
-    return User.get(user_id)
-
 @views.route('/')
-def signup():
-    return render_template('signup.html')
+def index():
+    if current_user.is_authenticated:
+        return redirect(url_for('views.home'))
+    else:
+        return redirect(url_for('auth.login'))
 
 @views.route('/home')
+@login_required
 def home():
     return render_template('home.html')
