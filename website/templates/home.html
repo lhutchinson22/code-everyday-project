@@ -4,4 +4,60 @@
 
 {% block content %}
 <h1>Welcome, {{ current_user.username }}!</h1>
+<h2>Where we running to next?</h2>
+
+<div class="form-container">
+    <form method="POST">
+        <div class="input-row">
+            <div class="form-group">
+                <label for="city">City:</label>
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    id="city" 
+                    name="city" 
+                    placeholder="Enter city name"
+                    value="{{ city if city }}"
+                >
+            </div>
+            <div class="form-group">
+                <label for="month">Month:</label>
+                <select class="form-control" id="month" name="month">
+                    <option value="" {% if not month %}selected{% endif %}>Select month</option>
+                    <option value="January" {% if month == "January" %}selected{% endif %}>January</option>
+                    <option value="February" {% if month == "February" %}selected{% endif %}>February</option>
+                    <option value="March" {% if month == "March" %}selected{% endif %}>March</option>
+                    <option value="April" {% if month == "April" %}selected{% endif %}>April</option>
+                    <option value="May" {% if month == "May" %}selected{% endif %}>May</option>
+                    <option value="June" {% if month == "June" %}selected{% endif %}>June</option>
+                    <option value="July" {% if month == "July" %}selected{% endif %}>July</option>
+                    <option value="August" {% if month == "August" %}selected{% endif %}>August</option>
+                    <option value="September" {% if month == "September" %}selected{% endif %}>September</option>
+                    <option value="October" {% if month == "October" %}selected{% endif %}>October</option>
+                    <option value="November" {% if month == "November" %}selected{% endif %}>November</option>
+                    <option value="December" {% if month == "December" %}selected{% endif %}>December</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="year">Year:</label>
+                <select class="form-control" id="year" name="year">
+                    <option value="" {% if not year %}selected{% endif %}>Select year</option>
+                    {% for y in range(2023, 2031) %}
+                        <option value="{{ y }}" {% if year == y|string %}selected{% endif %}>{{ y }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn-primary">Submit</button>
+    </form>
+</div>
+
+{% if city and month and year %}
+<div class="result-container">
+    <h3>You selected:</h3>
+    <p>City: {{ city }}</p>
+    <p>Month: {{ month }}</p>
+    <p>Year: {{ year }}</p>
+</div>
+{% endif %}
 {% endblock %}
